@@ -16,7 +16,7 @@ with open("/home/rapidpro/.config/bambu.toml", "rb") as f:
     config = tomllib.load(f)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("printer", choices=['Lefty', 'Poncho'])
+parser.add_argument("printer", choices=['Lefty', 'Poncho', 'Guster'])
 args = parser.parse_args()
 
 def debug(*args):
@@ -156,8 +156,9 @@ client.traystate = None
 client.initial = True
 client.username_pw_set("bblp",config[args.printer]['ACCESS_CODE'])
 print("connecting to broker")
-print(PORT[args.printer])
-client.connect("127.0.0.1", PORT[args.printer], 60)
+port = int(config[args.printer]['PORT'])
+print(port)
+client.connect("127.0.0.1", port, 60)
 client.subscribe((f"device/{config[args.printer]['SERIAL']}/report",1),(f"device/{config[args.printer]['SERIAL']}/requests",1))
 
 ##start loop to process received messages
